@@ -331,7 +331,7 @@ alternate_icon_folders = [
     "PremiumTurbo",
 ]
 
-composer_icon_folders = ["Telegram"]
+composer_icon_folders = []
 
 [
     filegroup(
@@ -420,7 +420,7 @@ plist_fragment(
             <string>{telegram_bundle_id}</string>
             <key>CFBundleURLSchemes</key>
             <array>
-                <string>telegram</string>
+                <string>nexgram</string>
             </array>
         </dict>
         <dict>
@@ -430,7 +430,7 @@ plist_fragment(
             <string>{telegram_bundle_id}.compatibility</string>
             <key>CFBundleURLSchemes</key>
             <array>
-                <string>tg</string>
+                <string>nxg</string>
                 <string>tonsite</string>
             </array>
         </dict>
@@ -514,14 +514,13 @@ icloud_fragment = "" if not telegram_enable_icloud else """
     telegram_icloud_environment="Production" if telegram_aps_environment == "production" else "Development"
 )
 
-associated_domains_fragment = "" if telegram_bundle_id not in official_bundle_ids else """
+associated_domains_fragment = """
 <key>com.apple.developer.associated-domains</key>
 <array>
-    <string>applinks:telegram.me</string>
-    <string>applinks:t.me</string>
-    <string>applinks:*.t.me</string>
-    <string>webcredentials:t.me</string>
-    <string>webcredentials:telegram.org</string>
+    <string>applinks:nexgram.org</string>
+    <string>applinks:*.nexgram.org</string>
+    <string>applinks:nexgram.org?mode=developer</string>
+    <string>applinks:*.nexgram.org?mode=developer</string>
 </array>
 """
 
@@ -629,7 +628,7 @@ plist_fragment(
     template =
     """
     <key>CFBundleDisplayName</key>
-    <string>Teleram</string>
+    <string>NexGram</string>
     """
 )
 
@@ -962,7 +961,7 @@ plist_fragment(
     <key>CFBundleIdentifier</key>
     <string>{telegram_bundle_id}.Share</string>
     <key>CFBundleName</key>
-    <string>Telegram</string>
+    <string>NexGram</string>
     <key>CFBundlePackageType</key>
     <string>XPC!</string>
     <key>NSExtension</key>
@@ -1054,7 +1053,7 @@ plist_fragment(
     <key>CFBundleIdentifier</key>
     <string>{telegram_bundle_id}.NotificationContent</string>
     <key>CFBundleName</key>
-    <string>Telegram</string>
+    <string>NexGram</string>
     <key>CFBundlePackageType</key>
     <string>XPC!</string>
     <key>NSExtension</key>
@@ -1104,25 +1103,6 @@ swift_library(
     ],
 )
 
-'''genrule(
-    name = "SetMinOsVersionNotificationContentExtension",
-    cmd_bash =
-"""
-    name=NotificationContentExtension.appex
-    cat $(location PatchMinOSVersion.source.sh) | sed -e "s/<<<MIN_OS_VERSION>>>/10\\.0/g" | sed -e "s/<<<NAME>>>/$$name/g" > $(location SetMinOsVersionNotificationContentExtension.sh)
-""",
-    srcs = [
-        "PatchMinOSVersion.source.sh",
-    ],
-    outs = [
-        "SetMinOsVersionNotificationContentExtension.sh",
-    ],
-    executable = True,
-    visibility = [
-        "//visibility:public",
-    ]
-)'''
-
 ios_extension(
     name = "NotificationContentExtension",
     bundle_id = "{telegram_bundle_id}.NotificationContent".format(
@@ -1161,7 +1141,7 @@ plist_fragment(
     <key>CFBundleIdentifier</key>
     <string>{telegram_bundle_id}.Widget</string>
     <key>CFBundleName</key>
-    <string>Telegram</string>
+    <string>NexGram</string>
     <key>CFBundlePackageType</key>
     <string>XPC!</string>
     <key>NSExtension</key>
@@ -1274,7 +1254,7 @@ plist_fragment(
     <key>CFBundleIdentifier</key>
     <string>{telegram_bundle_id}.SiriIntents</string>
     <key>CFBundleName</key>
-    <string>Telegram</string>
+    <string>NexGram</string>
     <key>CFBundlePackageType</key>
     <string>XPC!</string>
     <key>NSExtension</key>
@@ -1346,25 +1326,6 @@ swift_library(
     ],
 )
 
-'''genrule(
-    name = "SetMinOsVersionIntentsExtension",
-    cmd_bash =
-"""
-    name=IntentsExtension.appex
-    cat $(location PatchMinOSVersion.source.sh) | sed -e "s/<<<MIN_OS_VERSION>>>/10\\.0/g" | sed -e "s/<<<NAME>>>/$$name/g" > $(location SetMinOsVersionIntentsExtension.sh)
-""",
-    srcs = [
-        "PatchMinOSVersion.source.sh",
-    ],
-    outs = [
-        "SetMinOsVersionIntentsExtension.sh",
-    ],
-    executable = True,
-    visibility = [
-        "//visibility:public",
-    ]
-)'''
-
 ios_extension(
     name = "IntentsExtension",
     bundle_id = "{telegram_bundle_id}.SiriIntents".format(
@@ -1405,7 +1366,7 @@ plist_fragment(
     <key>CFBundleIdentifier</key>
     <string>{telegram_bundle_id}.BroadcastUpload</string>
     <key>CFBundleName</key>
-    <string>Telegram</string>
+    <string>NexGram</string>
     <key>CFBundlePackageType</key>
     <string>XPC!</string>
     <key>NSExtension</key>
@@ -1440,25 +1401,6 @@ swift_library(
         "//submodules/BroadcastUploadHelpers:BroadcastUploadHelpers",
     ],
 )
-
-'''genrule(
-    name = "SetMinOsVersionBroadcastUploadExtension",
-    cmd_bash =
-"""
-    name=BroadcastUploadExtension.appex
-    cat $(location PatchMinOSVersion.source.sh) | sed -e "s/<<<MIN_OS_VERSION>>>/11\\.0/g" | sed -e "s/<<<NAME>>>/$$name/g" > $(location SetMinOsVersionBroadcastUploadExtension.sh)
-""",
-    srcs = [
-        "PatchMinOSVersion.source.sh",
-    ],
-    outs = [
-        "SetMinOsVersionBroadcastUploadExtension.sh",
-    ],
-    executable = True,
-    visibility = [
-        "//visibility:public",
-    ]
-)'''
 
 ios_extension(
     name = "BroadcastUploadExtension",
@@ -1499,7 +1441,7 @@ plist_fragment(
     <key>CFBundleIdentifier</key>
     <string>{telegram_bundle_id}.NotificationService</string>
     <key>CFBundleName</key>
-    <string>Telegram</string>
+    <string>NexGram</string>
     <key>CFBundlePackageType</key>
     <string>XPC!</string>
     <key>NSExtension</key>
@@ -1568,11 +1510,11 @@ plist_fragment(
     <key>CFBundleDevelopmentRegion</key>
     <string>en</string>
     <key>CFBundleDisplayName</key>
-    <string>Teleram</string>
+    <string>NexGram</string>
     <key>CFBundleIdentifier</key>
     <string>{telegram_bundle_id}</string>
     <key>CFBundleName</key>
-    <string>Teleram</string>
+    <string>NexGram</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleSignature</key>
@@ -1630,17 +1572,17 @@ plist_fragment(
     <key>NSCameraUsageDescription</key>
     <string>We need this so that you can take and share photos and videos.</string>
     <key>NSContactsUsageDescription</key>
-    <string>Telegram stores your contacts heavily encrypted in the cloud to let you connect with your friends across all your devices.</string>
+    <string>NexGram stores your contacts heavily encrypted in the cloud to let you connect with your friends across all your devices.</string>
     <key>NSFaceIDUsageDescription</key>
     <string>You can use Face ID to unlock the app.</string>
     <key>NSLocationAlwaysUsageDescription</key>
-    <string>When you send your location to your friends, Telegram needs access to show them a map. You also need this to send locations from an Apple Watch.</string>
+    <string>When you send your location to your friends, NexGram needs access to show them a map. You also need this to send locations from an Apple Watch.</string>
     <key>NSLocationWhenInUseUsageDescription</key>
-    <string>When you send your location to your friends, Telegram needs access to show them a map.</string>
+    <string>When you send your location to your friends, NexGram needs access to show them a map.</string>
     <key>NSMicrophoneUsageDescription</key>
     <string>We need this so that you can record and share voice messages and videos with sound.</string>
     <key>NSMotionUsageDescription</key>
-    <string>When you send your location to your friends, Telegram needs access to show them a map.</string>
+    <string>When you send your location to your friends, NexGram needs access to show them a map.</string>
     <key>NSPhotoLibraryAddUsageDescription</key>
     <string>We need this so that you can share photos and videos from your photo library.</string>
     <key>NSPhotoLibraryUsageDescription</key>
@@ -1777,7 +1719,7 @@ ios_application(
         ":RequiredDeviceCapabilitiesPlist",
         ":UrlTypesInfoPlist",
     ],
-    app_icons = [ ":{}_icon".format(name) for name in composer_icon_folders ],
+    app_icons = [":DefaultAppIcon"],
     alternate_icons = [
         ":{}".format(name) for name in alternate_icon_folders
     ],

@@ -9,19 +9,18 @@ import TelegramNotices
 import AccountContext
 
 private let baseTelegramMePaths = [
-    "telegram.me",
-    "t.me", "telegram.dog"
+    "nexgram.org"
 ]
 private let telegramWebShortLinkHosts = [
-    "a.t.me", 
-    "k.t.me",
-    "z.t.me"
+    "a.nexgram.org", 
+    "k.nexgram.org",
+    "z.nexgram.org"
 ]
 private let baseTelegraPhPaths = [
     "telegra.ph/",
     "te.legra.ph/",
     "graph.org/",
-    "t.me/iv?",
+    "nexgram.org/iv?",
     "telegram.org/blog/",
     "telegram.org/tour/"
 ]
@@ -251,7 +250,7 @@ public func parseInternalUrl(sharedContext: SharedAccountContext, context: Accou
                             }
                         }
                         if let _ = url {
-                            return .internalInstantView(url: "https://t.me/\(query)")
+                            return .internalInstantView(url: "https://nexgram.org/\(query)")
                         }
                     } else if peerName == "contact" {
                         var code: String?
@@ -313,7 +312,7 @@ public func parseInternalUrl(sharedContext: SharedAccountContext, context: Accou
                             }
                         }
                         if let _ = token {
-                            return .oauth(url: "https://t.me/\(query)")
+                            return .oauth(url: "https://nexgram.org/\(query)")
                         }
                     } else {
                         for queryItem in queryItems {
@@ -373,40 +372,40 @@ public func parseInternalUrl(sharedContext: SharedAccountContext, context: Accou
                                         }
                                     }
                                     return .startAttach(peerName, value, choose)
-                                 } else if queryItem.name == "startapp" {
-                                     var mode: ResolvedStartAppMode = .generic
-                                     if let queryItems = components.queryItems {
-                                         for queryItem in queryItems {
-                                             if let value = queryItem.value {
-                                                 if queryItem.name == "mode" {
-                                                     switch value {
-                                                     case "compact":
-                                                         mode = .compact
-                                                     case "fullscreen":
-                                                         mode = .fullscreen
-                                                     default:
-                                                         break
-                                                     }
-                                                     break
-                                                 }
-                                             }
-                                         }
-                                     }
-                                     return .peer(.name(peerName), .appStart("", queryItem.value, mode))
-                                 } else if queryItem.name == "story" {
+                                } else if queryItem.name == "startapp" {
+                                    var mode: ResolvedStartAppMode = .generic
+                                    if let queryItems = components.queryItems {
+                                        for queryItem in queryItems {
+                                            if let value = queryItem.value {
+                                                if queryItem.name == "mode" {
+                                                    switch value {
+                                                    case "compact":
+                                                        mode = .compact
+                                                    case "fullscreen":
+                                                        mode = .fullscreen
+                                                    default:
+                                                        break
+                                                    }
+                                                    break
+                                                }
+                                            }
+                                        }
+                                    }
+                                    return .peer(.name(peerName), .appStart("", queryItem.value, mode))
+                                } else if queryItem.name == "story" {
                                     if value == "live" {
                                         return .peer(.name(peerName), .story(.live))
                                     } else if let id = Int32(value) {
                                         return .peer(.name(peerName), .story(.id(id)))
                                     }
-                                 } else if queryItem.name == "album" {
+                                } else if queryItem.name == "album" {
                                     if let id = Int64(value) {
                                         return .peer(.name(peerName), .storyFolder(id))
                                     }
-                                 } else if queryItem.name == "ref", let referrer = queryItem.value {
-                                     return .peer(.name(peerName), .referrer(referrer))
-                                 }
-                            } else if ["voicechat", "videochat", "livestream"].contains(queryItem.name)  {
+                                } else if queryItem.name == "ref", let referrer = queryItem.value {
+                                    return .peer(.name(peerName), .referrer(referrer))
+                                }
+                            } else if ["voicechat", "videochat", "livestream"].contains(queryItem.name) {
                                 return .peer(.name(peerName), .voiceChat(nil))
                             } else if queryItem.name == "startattach" {
                                 var choose: String?
@@ -1419,7 +1418,7 @@ public func parseProxyUrl(sharedContext: SharedAccountContext, url: String) -> (
             }
         }
     }
-    if let parsedUrl = URL(string: url), parsedUrl.scheme == "tg", let host = parsedUrl.host, let query = parsedUrl.query {
+    if let parsedUrl = URL(string: url), (parsedUrl.scheme == "nxg" || parsedUrl.scheme == "nexgram"), let host = parsedUrl.host, let query = parsedUrl.query {
         if let internalUrl = parseInternalUrl(sharedContext: sharedContext, context: nil, query: host + "?" + query), case let .proxy(host, port, username, password, secret) = internalUrl {
             return (host, port, username, password, secret)
         }
@@ -1440,7 +1439,7 @@ public func parseStickerPackUrl(sharedContext: SharedAccountContext, url: String
             }
         }
     }
-    if let parsedUrl = URL(string: url), parsedUrl.scheme == "tg", let host = parsedUrl.host, let query = parsedUrl.query {
+    if let parsedUrl = URL(string: url), (parsedUrl.scheme == "nxg" || parsedUrl.scheme == "nexgram"), let host = parsedUrl.host, let query = parsedUrl.query {
         if let internalUrl = parseInternalUrl(sharedContext: sharedContext, context: nil, query: host + "?" + query), case let .stickerPack(name, _) = internalUrl {
             return name
         }
@@ -1461,7 +1460,7 @@ public func parseWallpaperUrl(sharedContext: SharedAccountContext, url: String) 
             }
         }
     }
-    if let parsedUrl = URL(string: url), parsedUrl.scheme == "tg", let host = parsedUrl.host, let query = parsedUrl.query {
+    if let parsedUrl = URL(string: url), (parsedUrl.scheme == "nxg" || parsedUrl.scheme == "nexgram"), let host = parsedUrl.host, let query = parsedUrl.query {
         if let internalUrl = parseInternalUrl(sharedContext: sharedContext, context: nil, query: host + "?" + query), case let .wallpaper(wallpaper) = internalUrl {
             return wallpaper
         }
@@ -1482,7 +1481,7 @@ public func parseAdUrl(sharedContext: SharedAccountContext, context: AccountCont
             }
         }
     }
-    if let parsedUrl = URL(string: url), parsedUrl.scheme == "tg", let host = parsedUrl.host, let query = parsedUrl.query {
+    if let parsedUrl = URL(string: url), (parsedUrl.scheme == "nxg" || parsedUrl.scheme == "nexgram"), let host = parsedUrl.host, let query = parsedUrl.query {
         if let internalUrl = parseInternalUrl(sharedContext: sharedContext, context: context, query: host + "?" + query), case .peer = internalUrl {
             return internalUrl
         }
@@ -1572,6 +1571,49 @@ public func resolveUrlImpl(context: AccountContext, peerId: EnginePeer.Id?, url:
             
             if isTelegramWebShortLink(url) {
                 return .single(.result(.externalUrl(url)))
+            }
+
+            let customSchemes = ["nxg://", "nexgram://"]
+            for customScheme in customSchemes {
+                if url.lowercased().hasPrefix(customScheme) {
+                    var query = String(url[url.index(url.startIndex, offsetBy: customScheme.count)...])
+                    if query.hasPrefix("resolve?") || query.hasPrefix("resolve/?") {
+                        if let questionIndex = query.range(of: "?")?.upperBound {
+                            let paramsString = String(query[questionIndex...])
+                            var params: [String: String] = [:]
+                            for param in paramsString.components(separatedBy: "&") {
+                                let parts = param.components(separatedBy: "=")
+                                if parts.count == 2 {
+                                    params[parts[0]] = parts[1]
+                                }
+                            }
+                            if let domain = params["domain"] {
+                                var rebuilt = domain
+                                if let start = params["start"] {
+                                    rebuilt += "?start=\(start)"
+                                } else if let post = params["post"] {
+                                    rebuilt += "/\(post)"
+                                }
+                                query = rebuilt
+                            }
+                        }
+                    }
+                    if let internalUrl = parseInternalUrl(sharedContext: context.sharedContext, context: context, query: query) {
+                        return resolveInternalUrl(context: context, url: internalUrl)
+                        |> map { result -> ResolveUrlResult in
+                            switch result {
+                            case .progress:
+                                return .progress
+                            case let .result(resolved):
+                                if let resolved = resolved {
+                                    return .result(resolved)
+                                } else {
+                                    return .result(.externalUrl(url))
+                                }
+                            }
+                        }
+                    }
+                }
             }
 
             for basePath in baseTelegramMePaths {
