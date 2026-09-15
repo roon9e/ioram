@@ -8,7 +8,7 @@
 	"is_appstore_build": "false",
 	"appstore_id": "686449807",
 	"app_specific_url_scheme": "nxg",
-	"premium_iap_product_id": "org.nexgram.telegramPremium.monthly",
+	"premium_iap_product_id": "org.telegram.telegramPremium.monthly",
 	"enable_siri": false,
 	"enable_icloud": false
 }
