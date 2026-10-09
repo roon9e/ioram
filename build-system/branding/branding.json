@@ -1,0 +1,26 @@
+{
+    "general": {
+        "app_name": "Teleram",
+        "bundle_id": "ru.teleram.messenger",
+        "url_scheme": "teleram",
+        "url_scheme_short": "ram",
+        "app_specific_url_scheme": "ram",
+        "host": "teleram.ru"
+    },
+    "datacenter": {
+        "id": 2,
+        "debug_id": 1,
+        "ip": "178.22.53.96",
+        "port": 45789,
+        "restrict_to_tcp": true
+    },
+    "appstore": {
+        "is_appstore_build": "false",
+        "enable_siri": false,
+        "enable_icloud": false
+    },
+    "workarounds": {
+        "app_group_fallback": true,
+        "aps_environment_fallback": true
+    }
+}
